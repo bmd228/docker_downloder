@@ -1,0 +1,9 @@
+{
+  "name": "test",
+  "version": "1.0",
+  "dependencies": [
+    "libarchive",
+    "openssl",
+    "cli11"
+  ]
+}
