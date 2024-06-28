@@ -17,10 +17,8 @@
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "buildCommandArgs": "-DVCPKG_TARGET_TRIPLET=x64-windows-static",
       "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
-      "cmakeCommandArgs": "-DVCPKG_TARGET_TRIPLET=x64-windows-static"
+      "inheritEnvironments": [ "msvc_x64_x64" ]
     }
   ]
 }

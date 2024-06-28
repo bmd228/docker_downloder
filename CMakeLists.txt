@@ -3,6 +3,18 @@
 #
 cmake_minimum_required (VERSION 3.17)
 
+
+IF (WIN32)
+set(VCPKG_TARGET_TRIPLET x64-windows-static)
+IF ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+message("USING MTd")
+ADD_DEFINITIONS ( /MTd )
+ELSE ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+message("USING MT")
+ADD_DEFINITIONS ( /MT )
+ENDIF ( CMAKE_BUILD_TYPE MATCHES "Debug" )
+ENDIF (WIN32)
+
 project ("docker_downloder")
 find_package(OpenSSL REQUIRED)
 find_package(LibArchive REQUIRED)
