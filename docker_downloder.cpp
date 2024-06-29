@@ -258,8 +258,8 @@ int main(int argc, char** argv)
 		 cli_blobs.set_proxy(ip_proxy, port_proxy);
 		 if (!username.empty() && !password.empty())
 		 {
-			 cli_auth.set_basic_auth(username,password);
-			 cli_blobs.set_basic_auth(username, password);
+			 cli_auth.set_proxy_basic_auth(username,password);
+			 cli_blobs.set_proxy_basic_auth(username, password);
 		 }
 	}
 
