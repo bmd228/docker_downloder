@@ -5,7 +5,7 @@
 
 using namespace std;
 const  vector<std::string> registry = { "index.docker.io","registry.hub.docker.com", "registry.docker.io", "registry-1.docker.io", "hub.docker.com" };
-const std::string default_registry = "https://"+registry[0];
+std::string default_registry = "https://"+registry[1];
 
 bool add_packet(struct archive* a, const std::string& data, const size_t& size_dig, const std::string& filename)
 {
@@ -218,7 +218,7 @@ int main(int argc, char** argv)
 	app.add_option("-u,--username", username, "Proxy username")->configurable(true);
 	app.add_option("-k,--pwd", password, "Proxy password")->configurable(true);
 	app.add_option("-p,--port", port_proxy, "Proxy port")->default_val(0)->configurable(true);
-	
+	app.add_option("-r,--registry", default_registry, "Custom registry")->default_val("https://" + registry[1])->configurable(true);
 	CLI11_PARSE(app, argc, argv);
 	std::string output_config_file = "config.yaml"; 
 	std::ofstream ofs(output_config_file);
