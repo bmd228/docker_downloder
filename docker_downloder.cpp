@@ -202,6 +202,7 @@ int main(int argc, char** argv)
 	std::string docker_get_path;
 	bool enable_proxy = false;
 	bool only_http = false;
+	bool digest_auth = false;
 	std::string username;
 	std::string password;
 	std::string ip_proxy;
@@ -212,6 +213,7 @@ int main(int argc, char** argv)
 	app.add_option("-t,--tag", tag, "Tag")->default_val("latest")->configurable(false);
 	app.add_option("-o,--out", archive_path, "Save to")->default_val("D:/")->configurable(true);
 	app.add_flag("--proxy", enable_proxy, "Enable proxy")->default_val(false)->configurable(true);
+	app.add_flag("--digest", digest_auth, "Enable digest auth")->default_val(false)->configurable(true);
 	app.add_option("-a,--adress", ip_proxy, "IP adress for proxy")->configurable(true);
 	app.add_option("-u,--username", username, "Proxy username")->configurable(true);
 	app.add_option("-k,--pwd", password, "Proxy password")->configurable(true);
@@ -258,8 +260,16 @@ int main(int argc, char** argv)
 		 cli_blobs.set_proxy(ip_proxy, port_proxy);
 		 if (!username.empty() && !password.empty())
 		 {
-			 cli_auth.set_proxy_basic_auth(username,password);
-			 cli_blobs.set_proxy_basic_auth(username, password);
+			 if (digest_auth)
+			 {
+				 cli_auth.set_proxy_digest_auth(username, password);
+				 cli_blobs.set_proxy_digest_auth(username, password);
+			 }
+			 else
+			 {
+				 cli_auth.set_proxy_basic_auth(username, password);
+				 cli_blobs.set_proxy_basic_auth(username, password);
+			 }
 		 }
 	}
 
