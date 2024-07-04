@@ -44,7 +44,7 @@ bool add_packet(httplib::Client& cli_blobs, const std::string& digest, const htt
 		return false;
 	}
 
-	std::string data_uri =  default_registry + "/v2/" + imagename + "/blobs/" + digest;
+	std::string data_uri =   "/v2/" + imagename + "/blobs/" + digest;
 	static int64_t offset = 0; // Track offset for each block
 	std::cout << "Get blob:" << digest << std::endl;
 	int try_count(15);
@@ -203,6 +203,7 @@ int main(int argc, char** argv)
 	bool enable_proxy = false;
 	bool only_http = false;
 	bool digest_auth = false;
+	bool debug_info = false;
 	std::string username;
 	std::string password;
 	std::string ip_proxy;
@@ -214,6 +215,7 @@ int main(int argc, char** argv)
 	app.add_option("-o,--out", archive_path, "Save to")->default_val("D:/")->configurable(true);
 	app.add_flag("--proxy", enable_proxy, "Enable proxy")->default_val(false)->configurable(true);
 	app.add_flag("--digest", digest_auth, "Enable digest auth")->default_val(false)->configurable(true);
+	app.add_flag("--debug", debug_info, "Enable debug info")->default_val(false)->configurable(true);
 	app.add_option("-a,--adress", ip_proxy, "IP adress for proxy")->configurable(true);
 	app.add_option("-u,--username", username, "Proxy username")->configurable(true);
 	app.add_option("-k,--pwd", password, "Proxy password")->configurable(true);
@@ -277,7 +279,7 @@ int main(int argc, char** argv)
 	std::cout << "Downloading Docker image: " << imageName << std::endl;
 	
 	docker_get_path = "/token?service=registry.docker.io&scope=repository:" + imageName + ":pull";
-	std::string tag_uri =  default_registry + "/v2/" + imageName + "/manifests/latest";
+	std::string tag_uri =  "/v2/" + imageName + "/manifests/latest";
 
 	httplib::Headers header;
 
@@ -304,6 +306,8 @@ int main(int argc, char** argv)
 		else if (try_count <= 0)
 		{
 			std::cerr << "Failed to get token";
+			if (debug_info)
+				std::cerr <<std::endl<< httplib::to_string(res.error());
 			return 0;
 		}
 		else
@@ -341,7 +345,7 @@ int main(int argc, char** argv)
 					digest = k["digest"];
 					size_digest = k["size"].get<nlohmann::json::size_type>();
 					real_name_layer = remove_sha256_prefix(digest) + ".json";
-					tag_uri = default_registry + "/v2/" + imageName + "/manifests/" + digest;//k["digest"].get<std::string>();
+					tag_uri =  "/v2/" + imageName + "/manifests/" + digest;//k["digest"].get<std::string>();
 					std::cout << "Get list manifest" << std::endl;
 
 					while (true) {
@@ -391,6 +395,8 @@ int main(int argc, char** argv)
 		else if (try_count <= 0)
 		{
 			std::cerr << "Failed to get a manifest";
+			if (debug_info)
+				std::cerr << std::endl << httplib::to_string(res.error());
 			return 0;
 		}
 		else
